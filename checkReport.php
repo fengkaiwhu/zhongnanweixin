@@ -11,11 +11,57 @@
 </head>
 
 <?php
-require_once('./inc/funcs.inc.php');
-if(!isWeixin()){
-	echo "必须通过微信客户端访问!";
-	exit;	
-}
+    require_once('./inc/funcs.inc.php');
+    if(!isWeixin()){
+	    echo "必须通过微信客户端访问!";
+    	exit;	
+    }
+
+    if(!isset($_GET['mkey']) || !isset($_GET['reportId']) || !isset($_GET['packageId'])){
+        //定义为非法请求
+        echo "非法请求!";
+        exit;
+    }
+    $mkey = $_GET["mkey"];
+    require_once(dirname(__FILE__)."/inc/mysql.class.php");
+    try{
+        $db = new mysqlpdo($dbinfo);
+        //对应的message必须已经通过验证
+        $query = "select telephone,time from smsMessage where mid='$mkey' and used=1";
+        $res = $db->query($query);
+        $r = $res->fetchAll();
+        if(count($r) == 0){
+            //没有匹配到对应的手机号
+            echo "非法请求";
+            exit;
+        }
+
+        //单次验证有效期已过
+        if(time() - $r[0]["time"] > LOGINPERTIME * 60){
+            //echo "验证已过期!";
+            echo "<script language=\"javascript\">document.location=\"/smsVerify.php\"</script>";
+            exit;
+        }
+    }
+    catch(PDOException $e){
+        echo "数据库出错,请稍后再试!";
+        exit;
+    }
+
+    //得到对应的报告id和套餐id
+    $reportid = $_GET['reportId'];
+    $packageId = $_GET['packageId'];
+    
+    $getDate = True;
+    //由套餐id得到对应的检查科目id列表
+    // TODO
+    try{
+        
+    }
+    catch($PDOException $e){
+        //echo "查询数据库出错,请稍后再试!";
+        $getData = False;
+    }
 ?>
 
 
