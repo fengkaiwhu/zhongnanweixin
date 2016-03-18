@@ -27,7 +27,7 @@
 
     //获取检查结果
     try{
-        $query = "select * from '$tablename' where REPORTID='$reportid'";
+        $query = "select * from $tablename where REPORTID='$reportid'";
         $resultArray = $db->query($query);
         $resultArray = $resultArray->fetchAll();
         if(count($resultArray) == 0){
