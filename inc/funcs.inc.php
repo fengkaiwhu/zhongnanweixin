@@ -21,8 +21,8 @@ define("NOCONTENT",2);
 define("IMAGE_ERROR",3);
 define("FILE_ERROR",4);
 
-function SendJSON($status,$message='',$message2=''){
-    $result = array("status"=>$status,"content"=>$message, "content2"=>$message2);
+function SendJSON($status,$message='',$message2='', $message3=''){
+    $result = array("status"=>$status,"content"=>$message, "content2"=>$message2, "content3"=>$message3);
     echo json_encode($result);
 //    echo  preg_replace("#\\\u([0-9a-f]{4})#ie", "iconv('UCS-2BE', 'UTF-8', pack('H4', '\\1'))", json_encode($result));
     exit();

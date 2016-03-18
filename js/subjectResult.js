@@ -9,14 +9,33 @@ $(function () {
 				url:"/interface/subjectResult.php",
 				dataType:"json",
 				data:{
+                    "mkey":i.children("#mkey").val(),
+                    "reportid":i.children("#reportid").val(),
+                    "tablename":i.children("#tablename").val()
 				},
 				success:function (data) {
 					if (data.status !== 0) {
-						i.next().html("<div style='text-align:center;'>请求出错!!</div>");
+						//i.next().html("<div style='text-align:center;'>请求出错!!</div>");
+						i.next().html(data.content);
 					}else {
+                        var r_value = data.content;
+                        var r_name = data.content2;
+                        var r_compare = data.content3;
+                        var result = "";
+                        for(key in r_value){
+                            if(key !== "SUMMARY" || key !== "DOCTORNAME"){
+                                if(r_compare[key]){
+                                    result = result + '<tr><td>' + r_name[key] + '</td><td>' + r_value[key] + '</td></tr>';
+                                }else{
+                                    result = result + '<tr class="danger"><td>' + r_name[key] + '</td><td>' + r_value[key] + '</td></tr>';
+                                }
+                            }
+                        }
+                        result = result + '<tr class="success"><td>' + r_name['SUMMARY'] + '</td><td>' + r_value['SUMMARY'] + '</td></tr>';
+                        result = result + '<tr><td>' + r_name['DOCTORNAME'] + '</td><td>' + r_value['DOCTORNAME'] + '</td></tr>';
 						var h = "";
 						h = h + '<div class="table-responsive">'+
-								 		'<table class="table table-condensed table-bordered">'+								 		
+								 		'<table class="table table-condensed table-bordered">'+	
 								 			'<thead>'+
 								 				'<colgroup>'+
 								 					'<col width="50%"><col>'+
@@ -28,22 +47,7 @@ $(function () {
 								    			'</tr>'+
 								 			'</thead>'+				 
 								 			'<tbody>'+
-								     			'<tr>'+
-								         		'<td>白细胞</td>'+
-								        			'<td>8.17</td>'+
-								     			'</tr>'+
-								     			'<tr class="danger">'+
-								        			'<td>红细胞</td>'+
-								         		'<td>5.4 &uarr;</td>'+
-								     			'</tr>'+
-								     			'<tr>'+
-								         		'<td>血小板</td>'+
-								         		'<td>316</td>'+
-								     			'</tr>'+
-								     			'<tr class="danger">'+
-								         		'<td>血红蛋白</td>'+
-								         		'<td>164.8 &darr;</td>'+
-								     			'</tr>'+
+                                                result +
 								 			'</tbody>'+
 								 		'</table>'+
 						'</div>';		
