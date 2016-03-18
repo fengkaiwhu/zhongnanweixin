@@ -55,59 +55,55 @@
     $getDate = True;
     //由套餐id得到对应的检查科目id列表
     // TODO
+    // 表示科目表名->科目中文的映射
+    $name_table = [];
     try{
-        
+        $query = "select SUBJECTID from r_package_subject where PACKAGEID='$packageId'";
+        $res = $db->query($query);
+        $r = $res->fetchAll();
+
+        //由体检科目id得到对应的体检结果数据表名
+        foreach($r as $subject){
+            //$subject[0]代表对应的subjectid
+            $query = "select TABLENAME,SUBJECTNAME from t_check_subject where SUBJECTID='$subject[0]'";
+            $res = $db->query($query);
+            $r = $res->fetchAll();
+            //向数组中添加映射
+            $name_table[$r[0]['TABLENAME']] = $r[0]['SUBJECTNAME'];
+        }
+
     }
     catch($PDOException $e){
         //echo "查询数据库出错,请稍后再试!";
         $getData = False;
     }
+    //运行至此,如果$getData = False表示查询出错,没有获取到数据
+    //否则,根据$name_table 数组去对应的结果表中查询对应的检查数据
+    if(!$getData){
+        // TODO 出错逻辑
+        echo "查询数据库出错,请稍后再试!";
+    }else{
+        foreach($name_table as $table => $name){
+            echo "<div class='panel panel-info'>";
+            echo "<div class='panel-heading ajax-data'>";
+            //此时通过ajax传输至后台接口的数据应该包括: 访问密钥=>$mkey, 报告id=>$reportid, 对应的检查结果表名=>$table
+            echo "<input type='hidden' id='mkey' value='".$mkey."'>";
+            echo "<input type='hidden' id='reportid' value='".$mkey."'>";
+            echo "<input type='hidden' id='tablename' value='".$table."'>";
+            echo "<h5 class='panel-title' style='text-align:center;'>".$name."</h5>";
+            echo "</div>";
+            echo "<div></div>";
+            echo "</div>";
+        }
+    }
 ?>
-
+<!--
 
 <div class="panel panel-info">
 	<div class="panel-heading ajax-data">
    	<h5 class="panel-title" style="text-align:center;">血常规</h5>
 	</div>
 	<div>
-	<!--
-		<div class="table-responsive">
-	 		<table class="table table-condensed table-bordered">
-	 		
-	 			<thead>
-	 				<colgroup>
-	 					<col width="50%"><col>
-	 					<col><col>
-	 				</colgroup>
-	     			<tr>
-	         		<th>项目名称</th>
-	         		<th>检查结果</th>
-	    			</tr>
-	 			</thead>
-	 
-	 			<tbody>
-	     			<tr>
-	         		<td>白细胞</td>
-	        			<td>8.17</td>
-	     			</tr>
-	     			<tr class="danger">
-	         		<td>红细胞</td>
-	         		<td>5.4 &uarr;</td>
-	     			</tr>
-	     			<tr>
-	         		<td>血小板</td>
-	         		<td>316</td>
-	     			</tr>
-	     			<tr class="danger">
-	         		<td>血红蛋白</td>
-	         		<td>164.8 &darr;</td>
-	     			</tr>
-	 			</tbody>
-	 			
-	 		</table>
-	
-		</div>
-		-->
 	</div>
 </div>
 
@@ -152,5 +148,5 @@
 	</div>
 	<div></div>
 </div>
-
+-->
 </html>
