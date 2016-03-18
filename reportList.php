@@ -116,20 +116,6 @@
                             }
                         }
                     ?>
-	     			<tr>
-	         		    <td>中南医院</td>
-               			<td>张三</td>
-               			<td>2015-09-09</td>
-               			<td><a href="checkReport.php">查看</a></td>
-	     			</tr>
-                                <?php for($i=1;$i<20;$i++){?>
-	     			<tr>
-	         		<td>口腔医院</td>
-	         		<td>张三</td>
-	         		<td>2016-03-01</td>
-	         		<td><a href="checkReport.php">查看</a></td>
-	     			</tr>
-                                <?php } ?>
 	 			</tbody>
 				</div></div>
 	 			
