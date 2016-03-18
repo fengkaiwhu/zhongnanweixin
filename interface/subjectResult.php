@@ -42,7 +42,7 @@
         SendJSON(-1, $e->getMessage());
     }
 
-    SendJSON(0, $resultArray);
+//    SendJSON(0, $resultArray);
 
         foreach($resultArray as $key=>$value){
             // FIXME: 这里需要注意数组中中文索引的问题,或者增加一个数组用来存放对应的中文名称,这里采用后一种方法

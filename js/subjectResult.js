@@ -23,7 +23,7 @@ $(function () {
                         var r_compare = data.content3;
                         var result = "";
                         for(key in r_value){
-                            if(key !== "SUMMARY" || key !== "DOCTORNAME"){
+                            if(key !== "SUMMARY" && key !== "DOCTORNAME"){
                                 if(r_compare[key]){
                                     result = result + '<tr><td>' + r_name[key] + '</td><td>' + r_value[key] + '</td></tr>';
                                 }else{
