@@ -22,6 +22,7 @@ class mysqlpdo extends PDO{
             //$this->rollback();
         }
         $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $this->exec('SET NAMES utf8');
     }
 
     function commit(){

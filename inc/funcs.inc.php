@@ -6,7 +6,7 @@ define("PAGESIZE",20);
 define("PERTIME", 10);
 
 //短信验证登录的有效期,代表一次验证多长时间内登录有效, min
-define("LOGINPERTIME", 30);
+define("LOGINPERTIME", 3000);
 
 //固定的接口访问密钥
 define("CKEY", "df45asdf45asdf21asdf=");

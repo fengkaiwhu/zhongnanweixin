@@ -21,7 +21,7 @@
             exit;
         }
     }
-    catch($PDOException $e){
+    catch(PDOException $e){
         SendJSON(-1, $e->getMessage());
     }
 
@@ -38,7 +38,7 @@
         $r_name = [];//用来存储处理过的中文名称
         $r_compare = [];//用来指示该指标是否正常,True表示正常,False表示不正常
     }
-    catch($PDOException $e){
+    catch(PDOException $e){
         SendJSON(-1, $e->getMessage());
     }
 
@@ -69,7 +69,7 @@
                     $query = "select CHINESENAME from t_data_dictionary where NAME='$key'";
                     $r_name[$key] = $db->getNameById($query, "CHINESENAME");
                 }
-                catch($PDOException $e){
+                catch(PDOException $e){
                     $r_name[$key] = -1;
                 }
                 continue;
@@ -94,7 +94,7 @@
                     $r_compare[$key] = True;
                 }
             }
-            catch($PDOException $e){
+            catch(PDOException $e){
                 //FIXME 异常处理
             }
         }

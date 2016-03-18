@@ -52,7 +52,7 @@
     $reportid = $_GET['reportId'];
     $packageId = $_GET['packageId'];
     
-    $getDate = True;
+    $getData = True;
     //由套餐id得到对应的检查科目id列表
     // TODO
     // 表示科目表名->科目中文的映射
@@ -64,8 +64,9 @@
 
         //由体检科目id得到对应的体检结果数据表名
         foreach($r as $subject){
-            //$subject[0]代表对应的subjectid
-            $query = "select TABLENAME,SUBJECTNAME from t_check_subject where SUBJECTID='$subject[0]'";
+            //$subject[0]代表对应的SUBJECTID
+            $sid = $subject["SUBJECTID"];
+            $query = "select TABLENAME,SUBJECTNAME from t_check_subject where SUBJECTID='$sid'";
             $res = $db->query($query);
             $r = $res->fetchAll();
             //向数组中添加映射
@@ -73,7 +74,7 @@
         }
 
     }
-    catch($PDOException $e){
+    catch(PDOException $e){
         //echo "查询数据库出错,请稍后再试!";
         $getData = False;
     }
@@ -88,7 +89,7 @@
             echo "<div class='panel-heading ajax-data'>";
             //此时通过ajax传输至后台接口的数据应该包括: 访问密钥=>$mkey, 报告id=>$reportid, 对应的检查结果表名=>$table
             echo "<input type='hidden' id='mkey' value='".$mkey."'>";
-            echo "<input type='hidden' id='reportid' value='".$mkey."'>";
+            echo "<input type='hidden' id='reportid' value='".$reportid."'>";
             echo "<input type='hidden' id='tablename' value='".$table."'>";
             echo "<h5 class='panel-title' style='text-align:center;'>".$name."</h5>";
             echo "</div>";
