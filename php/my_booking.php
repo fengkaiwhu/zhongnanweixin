@@ -32,10 +32,10 @@
 	
 	$code = $_GET["code"];
 	$state = $_GET["state"];
-	$appid = "wx777c25c676b36289";
-	$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
+	//$appid = "wx777c25c676b36289";
+	//$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
 	
-	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". $appid. "&secret=". $appsecret. "&code=". $code. "&grant_type=authorization_code";
+	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". APPID. "&secret=". APPSECRET. "&code=". $code. "&grant_type=authorization_code";
 
 	$content = _getcurl($url);
 	$content = json_decode($content, true);
@@ -44,7 +44,7 @@
 	//查询数据库操作
 	$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
 	$link = mysql_select_db(DB_NAME, $con);
-	mysql_set_charset("utf-8");
+	mysql_set_charset("utf8");
 	$sql = "select * from t_appointment_list where OPENID = '". $openid. "'";
 
 	$r = mysql_query($sql);

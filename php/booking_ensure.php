@@ -26,7 +26,7 @@
 	
 	$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
 	$link = mysql_select_db(DB_NAME, $con);
-	mysql_set_charset("utf-8");
+	mysql_set_charset("utf8");
 
 	$sql = "insert into t_appointment_list (OPENID, NAME, IDCARD, SEX, AGE, CELLPHONE, DATE, ORGANIZATIONID, PACKAGEID) values ('".$userId."', '".$name."', '".$idNum."', '".$sex."', '".$age."', '".$telephone."', '".$date."', '".$institution."', '".$group."' )";
 	mysql_query($sql);

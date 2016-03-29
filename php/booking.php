@@ -11,6 +11,8 @@
 
 <body onload="getvalue()">
   <?php
+  require "../inc/mysql.class.php";
+  
     function _getcurl($url) {
 	
 		$ch = curl_init();
@@ -31,10 +33,10 @@
 	
 	$code = $_GET["code"];
 	$state = $_GET["state"];
-	$appid = "wx5907de41eed25602";
-	$appsecret = "d4624c36b6795d1d99dcf0547af5443d";
+	//$appid = "wx777c25c676b36289";
+	//$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
 	
-	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". $appid. "&secret=". $appsecret. "&code=". $code. "&grant_type=authorization_code";
+	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". APPID. "&secret=". APPSECRET. "&code=". $code. "&grant_type=authorization_code";
 
 	$content = _getcurl($url);
 	$content = json_decode($content, true);

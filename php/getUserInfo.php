@@ -1,9 +1,12 @@
 <?php
-$openid = $_GET["openid"];
-$appid = "wx777c25c676b36289";
-$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
 
-$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$appsecret;
+require "../inc/mysql.class.php";
+
+$openid = $_GET["openid"];
+//$appid = "wx777c25c676b36289";
+//$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
+
+$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".APPID."&secret=".APPSECRET;
 
 $content = _getcurl($url);
 $content = json_decode($content, true);

@@ -16,6 +16,8 @@ define("DB_PORT", "3306");
 define("DB_USER", "root");
 define("DB_PASS", "nercms");
 define("DB_NAME", "hospital");
+define("APPID", "wx777c25c676b36289");
+define("APPSECRET", "977d97c23c77a7af29f4889fab8ff9a3");
 
 class mysqlpdo extends PDO{
     //构造函数第一个参数表示数据库信息,第二个参数表示是否使用事物

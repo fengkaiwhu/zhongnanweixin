@@ -81,7 +81,7 @@ class WeChat
 			//插入数据库操作
 			$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
 			$link = mysql_select_db(DB_NAME, $con);
-			mysql_set_charset("utf-8");
+			mysql_set_charset("utf8");
 
 			$sql = "insert into users (OPENID, SEX, NICKNAME, PROVINCE, CITY, COUNTRY) values ('".$openid."', '".$sex."', '".$nickname."', '".$city."', '".$province."', '".$country."')";
 			mysql_query($sql);
@@ -111,9 +111,9 @@ class WeChat
 			$openid = $fromUsername;
 			
 			//删除数据库操作
-			$co$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
+			$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
 			$link = mysql_select_db(DB_NAME, $con);
-			mysql_set_charset("utf-8");
+			mysql_set_charset("utf8");
 
 			$sql = "delete from users where OPENID = '". $openid. "'";
 			mysql_query($sql);
@@ -158,7 +158,7 @@ class WeChat
 				//插入数据库操作
 				$con = mysql_connect(SAE_MYSQL_HOST_M. ":". SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS);
 				$link = mysql_select_db(SAE_MYSQL_DB, $con);
-				mysql_set_charset("utf-8");
+				mysql_set_charset("utf8");
 
 				$sql = "insert into user (`openid`, `sex`, `nickname`, `province`, `city`, `country`) values ('".$openid."', '".$sex."', '".$nickname."', '".$city."', '".$province."', '".$country."')";
 				mysql_query($sql);
