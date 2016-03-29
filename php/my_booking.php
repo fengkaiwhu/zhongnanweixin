@@ -6,166 +6,187 @@
     <script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/jquery.mobile-1.3.2.min.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
-    <title>我的体检</title>
+    <title>我的预约</title>
 </head>
 
 <body onload="getvalue()">
   <?php
-	class stateInterface
-    {
-      public function _request($curl, $https = true, $method = 'GET', $data = null)
-      {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $curl);      
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($https) {
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
-        }
-        if ($method == 'POST') {
-          curl_setopt($ch, CURLOPT_POST, true);
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        }
-        $content = curl_exec($ch);
-        curl_close($ch);
-        return $content;
-      }
+	require "../inc/mysql.class.php";
+	function _getcurl($url) {
+	
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_URL, $url);      
+		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
+		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+		$output = curl_exec($ch);
+		curl_close($ch);
+		return $output;
 	}
+	
 	$code = $_GET["code"];
 	$state = $_GET["state"];
-	$stateInterface = new stateInterface();
-	$content =  $stateInterface->_request('https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx5907de41eed25602&secret=d4624c36b6795d1d99dcf0547af5443d&code='. $code. '&grant_type=authorization_code');
-	$content = json_decode($content);
-	$openid = $content->openid;
+	$appid = "wx777c25c676b36289";
+	$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
 	
-	// SAE数据库连接
-	// $hostname = SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT;
-	// $dbuser = SAE_MYSQL_USER;
-	// $dbpass = SAE_MYSQL_PASS;
-	// $dbname = SAE_MYSQL_DB;
+	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". $appid. "&secret=". $appsecret. "&code=". $code. "&grant_type=authorization_code";
+
+	$content = _getcurl($url);
+	$content = json_decode($content, true);
+	$openid = $content['openid'];
 	
-	// $con = mysql_connect($hostname, SAE_MYSQL_USER, SAE_MYSQL_PASS);
-	// $link = mysql_select_db(SAE_MYSQL_DB, $con);
-	// mysql_query("set name utf8");
-	// $sql = "select from userinfo where 'userId' = '".$openid."';
-	// $info = mysql_query($sql);
+	//查询数据库操作
+	$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
+	$link = mysql_select_db(DB_NAME, $con);
+	mysql_set_charset("utf-8");
+	$sql = "select * from t_appointment_list where OPENID = '". $openid. "'";
+
+	$r = mysql_query($sql);
+	while ($row = mysql_fetch_array ($r, MYSQL_NUM)) {
+		$name = $row[1];
+		$s = $row[3];
+		$age = $row[4];
+		$telephone = $row[5];
+		$i = $row[6];
+		$g = $row[7];
+		$date = $row[8];
+	}
 	
-	// $userName = $info->userName;
-	// $sex = $info->sex;
-	// $city = $info->city;
-	// $provience = $info->provience;
+	if ($s == 1)
+		$sex = "男";
+	else
+		$sex = "女";
 	
-	$userId = $_POST["userId"];
-	$name = $_POST["name"];
-	$idNum = $_POST["idNum"];
-	$sex = $_POST["sex"];
-	$age = $_POST["age"];
-	$telephone = $_POST["telephone"];
-	$date = $_POST["date"];
-	$institution = $_POST["institution"];
-	$group = $_POST["group"];
+	if ($i == 1)
+		$institution = "体检机构A";
+	else if ($i == 2)
+		$institution = "体检机构B";
+	else if ($i == 3)
+		$institution = "体检机构C";
+	else if ($i == 4)
+		$institution = "体检机构D";
+	else 
+		$institution = "未知体检机构";
+	
+	if ($i == 1)
+		$group = "体检套餐A";
+	else if ($g == 2)
+		$group = "体检套餐B";
+	else if ($g == 3)
+		$group = "体检套餐C";
+	else if ($g == 4)
+		$group = "体检套餐D";
+	else 
+		$group = "未知体检套餐";
+	
+	//require "mysql.class.php"
+	//try {
+	//	$db = new mysqlpdo($dbinfo);
+	//	$sql = "select * from t_appointment_list where OPENID =".$openid.;
+	//	$r = $db->query($sql);
+	//	$r = $r->fetchAll();
+	//} catch (Exception e) {
+	//	
+	//}
+	//$name = $r[0]["NAME"];
+	//$sex = $r[0]["SEX"];
+	//$age = $r[0]["AGE"];
+	//$telephone = $r[0]["CELLPHONE"];
+	//$date = $r[0]["DATE"];
+	//$institution = $r[0]["ORGANIZATIONID"];
+	//$group = $r[0]["PACKAGEID"];
+	
+	//$name = "张三";
+	//$s = "1";
+	//$age = "33";
+	//$telephone = "13333333333";
+	//$date = "2016-03-29";
+	//$i = "1";
+	//$g = "2";
 	
 	?>
    <div data-role="page">
     <div data-role="content">
-      <h3 style="text-align:center;">我的体检</h3>
-      <form action="/php/booking_ensure.php" method="post">
-                <div data-role="fieldcontain" style="align:center">
-                    <table width="100%">   
-                        <tr>
-                            <td>
-                              <label for="name">姓名：</label>
-                            </td>
-                            <td>
-                                <input type="text" name="name" id="name" placeholder="请输入姓名" />
-                                <input type="hidden" name="userId" id="userId" value="<?=$openid?>" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                              <label for="idNum">身份证号：</label>
-                            </td>
-                            <td>
-                                <input type="text" name="idNum" id="idNum" placeholder="请输入身份证号" />
-                            </td>
-                        </tr>
-                        <tr>
-                          <td>
-                                <label for="sex">性别：</label>
-                            </td>
-                            <td>
-                                <fieldset data-role="controlgroup" data-type="horizontal">
-                                  <label for="male">男性</label>
-                                  <input type="radio" name="sex" id="male" value="男">
-                                  <label for="female">女性</label>
-                                  <input type="radio" name="sex" id="female" value="女">
-                              </fieldset>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                             <label for="age">年龄：</label>
-                          </td>
-                           <td>
-                            <input type="range" name="age" id="age" value="30" min="0" max="120">
-                        </td>
-                  </tr>
-                  <tr>
-                      <td>
-                         <label for="telephone">电话：</label>
-                     </td>
-                     <td>
-                      <input type="text" name="telephone" id="telephone" placeholder="请输入电话" />
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                     <label for="date">预约时间：</label>
-                 </td>
-                 <td>
-                  <input type="date" name="date" id="date" />
-              </td>
-          </tr>
-          <tr>
-              <td>
-                 <label for="group">体检机构：</label>
-             </td>
-             <td>
-              <fieldset data-role="controlgroup">
-                  <select name="institution" id="institution" data-native-menu="false">
-                     <option value="A">体检机构A</option>
-                     <option value="B">体检机构B</option>
-                     <option value="C">体检机构C</option>
-                     <option value="D">体检机构D</option>
-                 </select>
-             </fieldset>
-             </td>
-         </tr>
-          <tr>
-              <td>
-                 <label for="group">套餐选择：</label>
-             </td>
-             <td>
-              <fieldset data-role="controlgroup">
-                  <select name="group" id="group" data-native-menu="false">
-                     <option value="A">体检套餐A</option>
-                     <option value="B">体检套餐B</option>
-                     <option value="C">体检套餐C</option>
-                     <option value="D">体检套餐D</option>
-                 </select>
-             </fieldset>
-             </td>
-         </tr>
-  <tr align="center">
-      <td colspan=2>
-         <input type="submit" value="--提交预约信息--">
-     </td>
-  </tr>
-  </table>
-  </div>
-  </form>
-  </div>
-  </div>
+      <h3 style="text-align:center;">我的预约</h3>
+		<div data-role="fieldcontain" style="align:center">
+			<table width="100%">   
+				<tr>
+					<td>
+					  <label for="name">姓名：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$name?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">性别：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$sex?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">年龄：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$age?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">电话：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$telephone?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">预约时间：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$date?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">体检机构：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$institution?>" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					  <label for="name">预约套餐：</label>
+					</td>
+					<td>
+						<input name="userId" id="userId" value="<?=$group?>" readonly="readonly"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<p style="text-align:justify; font-size:16px; font-weight:bold">
+		<p style="text-align:justify; font-size:16px; font-weight:bold">
+			注意事项：</p>
+		<p style="text-align:justify; font-size:14px; text-indent:2em">
+			如需修改预约信息，请致电：02787778777。</p>
+		<p style="text-align:justify; font-size:16px; font-weight:bold">
+			体检预导航：</p>
+		<img src="/img/buju.jpg" width="100%" />
+		<p style="text-align:justify; font-size:16px font; font-weight:900">
+			图示：</p>
+		<p style="text-align:justify; font-size:14px">
+			6、&nbsp;饮食营养中心<br />7、&nbsp;器械消毒中心<br />8、&nbsp;后勤服务供应中心<br />9、&nbsp;宁养院<br />10、留学生进修宿舍<br />11、综合药库<br />12、动物实验<br />13、科研培训楼</p>
+		</div>
+	</div>
 </body>
 </html>

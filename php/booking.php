@@ -11,40 +11,41 @@
 
 <body onload="getvalue()">
   <?php
-    class stateInterface
-    {
-      public function _request($curl, $https = true, $method = 'GET', $data = null)
-      {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $curl);      
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($https) {
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
-        }
-        if ($method == 'POST') {
-          curl_setopt($ch, CURLOPT_POST, true);
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        }
-        $content = curl_exec($ch);
-        curl_close($ch);
-        return $content;
-      }
-  }
-  $code = $_GET["code"];
-  $state = $_GET["state"];
-  $stateInterface = new stateInterface();
-  $content =  $stateInterface->_request('https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx5907de41eed25602&secret=d4624c36b6795d1d99dcf0547af5443d&code='. $code. '&grant_type=authorization_code');
-  $content = json_decode($content);
-  $openid = $content->openid;
+    function _getcurl($url) {
+	
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_URL, $url);      
+		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
+		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+		$output = curl_exec($ch);
+		curl_close($ch);
+		return $output;
+	}
+	
+	$code = $_GET["code"];
+	$state = $_GET["state"];
+	$appid = "wx5907de41eed25602";
+	$appsecret = "d4624c36b6795d1d99dcf0547af5443d";
+	
+	$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". $appid. "&secret=". $appsecret. "&code=". $code. "&grant_type=authorization_code";
+
+	$content = _getcurl($url);
+	$content = json_decode($content, true);
+	$openid = $content['openid'];
   ?>
   <div data-role="page">
     <div data-role="content">
       <h3 style="text-align:center;">预约体检</h3>
       <form action="/php/booking_ensure.php" method="post">
                 <div data-role="fieldcontain" style="align:center">
-                    <table width="100%">   
+                    <table width="100%">
                         <tr>
                             <td>
                               <label for="name">姓名：</label>
@@ -69,9 +70,9 @@
                             <td>
                                 <fieldset data-role="controlgroup" data-type="horizontal">
                                   <label for="male">男性</label>
-                                  <input type="radio" name="sex" id="male" value="男">
+                                  <input type="radio" name="sex" id="male" value="1" checked>
                                   <label for="female">女性</label>
-                                  <input type="radio" name="sex" id="female" value="女">
+                                  <input type="radio" name="sex" id="female" value="2">
                               </fieldset>
                           </td>
                         </tr>
@@ -106,10 +107,10 @@
              <td>
               <fieldset data-role="controlgroup">
                   <select name="institution" id="institution" data-native-menu="false">
-                     <option value="A">体检机构A</option>
-                     <option value="B">体检机构B</option>
-                     <option value="C">体检机构C</option>
-                     <option value="D">体检机构D</option>
+                     <option selected="selected" value="1">体检机构A</option>
+                     <option value="2">体检机构B</option>
+                     <option value="3">体检机构C</option>
+                     <option value="4">体检机构D</option>
                  </select>
              </fieldset>
              </td>
@@ -121,10 +122,10 @@
              <td>
               <fieldset data-role="controlgroup">
                   <select name="group" id="group" data-native-menu="false">
-                     <option value="A">体检套餐A</option>
-                     <option value="B">体检套餐B</option>
-                     <option value="C">体检套餐C</option>
-                     <option value="D">体检套餐D</option>
+                     <option selected="selected" value="1">体检套餐A</option>
+                     <option value="2">体检套餐B</option>
+                     <option value="3">体检套餐C</option>
+                     <option value="4">体检套餐D</option>
                  </select>
              </fieldset>
              </td>

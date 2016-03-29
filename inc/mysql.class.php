@@ -11,6 +11,12 @@ $dbinfo=array(
     "passwd"=>"nercms"
 );
 
+define("DB_HOST", "127.0.0.1");
+define("DB_PORT", "3306");
+define("DB_USER", "root");
+define("DB_PASS", "nercms");
+define("DB_NAME", "hospital");
+
 class mysqlpdo extends PDO{
     //构造函数第一个参数表示数据库信息,第二个参数表示是否使用事物
     function __construct($dbinfo, $isTransaction = False){
