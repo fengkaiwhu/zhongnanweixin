@@ -7,6 +7,6 @@ define('TOKEN', 'weixin');
 require 'wechat.class.php';
 require "../inc/mysql.class.php";
 $wechat = new WeChat(APPID, APPSECRET, TOKEN);
-$wechat->valid();                              //验证token
-//$wechat->responseMsg();                          //消息响应
+//$wechat->valid();                              //验证token
+$wechat->responseMsg();                          //消息响应
  ?>

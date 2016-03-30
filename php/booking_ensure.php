@@ -17,7 +17,8 @@
 	$sex = $_POST["sex"];
 	$age = $_POST["age"];
 	$telephone = $_POST["telephone"];
-	$date = $_POST["date"];
+    $date = $_POST["date"];
+    $date = strtotime($data);
 	$institution = $_POST["institution"];
 	$group = $_POST["group"];
 	$status = "1";
@@ -27,8 +28,8 @@
 	$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
 	$link = mysql_select_db(DB_NAME, $con);
 	mysql_set_charset("utf8");
-
-	$sql = "insert into t_appointment_list (OPENID, NAME, IDCARD, SEX, AGE, CELLPHONE, DATE, ORGANIZATIONID, PACKAGEID) values ('".$userId."', '".$name."', '".$idNum."', '".$sex."', '".$age."', '".$telephone."', '".$date."', '".$institution."', '".$group."' )";
+    $time = time();
+	$sql = "insert into t_appointment_list (OPENID, NAME, IDCARD, SEX, AGE, CELLPHONE, DATE, ORGANIZATIONID, PACKAGEID, OPERATIONTIME, STATUS) values ('".$userId."', '".$name."', '".$idNum."', '".$sex."', '".$age."', '".$telephone."', '".$date."', '".$institution."', '".$group."', '".$time."','".$status."' )";
 	mysql_query($sql);
 	
 	?>

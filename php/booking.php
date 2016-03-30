@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/jquery.mobile-1.3.2.min.css">
     <script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/jquery.mobile-1.3.2.min.js"></script>
+    <script src="/js/booking.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <title>预约体检</title>
 </head>
@@ -40,7 +41,45 @@
 
 	$content = _getcurl($url);
 	$content = json_decode($content, true);
-	$openid = $content['openid'];
+    $openid = $content['openid'];
+
+    try{
+        $db = new mysqlpdo($dbinfo);
+        $sql = "select ORGANIZATIONID, ORGANIZATIONNAME from t_check_organization";
+        $result = $db->query($sql);
+        $result = $result->fetchAll();
+        $organization = "";
+        foreach($result as $key=>$value){
+            if($key == 0){
+                $organization .="<option selected='selected' value='".$value["ORGANIZATIONID"]."'>".$value["ORGANIZATIONNAME"]."</option>"; 
+                $firstid = $value["ORGANIZATIONID"];
+            }else
+                $organization .="<option value='".$value["ORGANIZATIONID"]."'>".$value["ORGANIZATIONNAME"]."</option>"; 
+
+        }
+    }
+    catch(PDOException $e){
+        //FIXME
+    }
+
+    try{
+        $sql = "select PACKAGEID, PACKAGENAME from t_check_package where ORGANIZATIONID='$firstid'";
+        $result = $db->query($sql);
+        $result = $result->fetchAll();
+        $package = "";
+        foreach($result as $key=>$value){
+            if($key == 0){
+                $package .= "<option selected='selected' value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>"
+            }else{
+                $package .= "<option value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>"
+
+            }
+        }
+    }
+    catch(PDOException $e){
+        //FIXME
+    }
+    
   ?>
   <div data-role="page">
     <div data-role="content">
@@ -109,10 +148,9 @@
              <td>
               <fieldset data-role="controlgroup">
                   <select name="institution" id="institution" data-native-menu="false">
-                     <option selected="selected" value="1">体检机构A</option>
-                     <option value="2">体检机构B</option>
-                     <option value="3">体检机构C</option>
-                     <option value="4">体检机构D</option>
+                    <?php
+                       echo $organization; 
+                    ?>
                  </select>
              </fieldset>
              </td>
@@ -124,10 +162,7 @@
              <td>
               <fieldset data-role="controlgroup">
                   <select name="group" id="group" data-native-menu="false">
-                     <option selected="selected" value="1">体检套餐A</option>
-                     <option value="2">体检套餐B</option>
-                     <option value="3">体检套餐C</option>
-                     <option value="4">体检套餐D</option>
+                    <?php echo $package; ?>                     
                  </select>
              </fieldset>
              </td>
