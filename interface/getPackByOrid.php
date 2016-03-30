@@ -14,7 +14,7 @@
         $db = new mysqlpdo($dbinfo);
         $query = "select PACKAGEID, PACKAGENAME from t_check_package where ORGANIZATIONID='$id'";
         $rows = $db->query($query);
-        $rows = $db->fetchAll();
+        $rows = $rows->fetchAll();
     }
     catch(PDOException $e){
         SendJSON(-1, "数据库出错!!");

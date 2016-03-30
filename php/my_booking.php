@@ -41,67 +41,47 @@
 	$content = json_decode($content, true);
 	$openid = $content['openid'];
 	
-	//查询数据库操作
-	$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
-	$link = mysql_select_db(DB_NAME, $con);
-	mysql_set_charset("utf8");
-	$sql = "select * from t_appointment_list where OPENID = '". $openid. "'";
-
-	$r = mysql_query($sql);
-	while ($row = mysql_fetch_array ($r, MYSQL_NUM)) {
-		$name = $row[1];
-		$s = $row[3];
-		$age = $row[4];
-		$telephone = $row[5];
-		$i = $row[6];
-		$g = $row[7];
-		$date = $row[8];
+	require "../inc/mysql.class.php";
+	try {
+		$db = new mysqlpdo($dbinfo);
+		$sql = "select * from t_appointment_list where OPENID =".$openid."order by OPERATIONTIME desc limit 1";
+		$r = $db->query($sql);
+		$r = $r->fetchAll();
+	} catch (Exception e) {
+		
 	}
-	
+	$name = $r[0]["NAME"];
+	$s = $r[0]["SEX"];
+	$age = $r[0]["AGE"];
+	$telephone = $r[0]["CELLPHONE"];
+    $date = $r[0]["DATE"];
+    $date = date("Y-m-d", $date);
+	$institution = $r[0]["ORGANIZATIONID"];
+    $group = $r[0]["PACKAGEID"];
 	if ($s == 1)
 		$sex = "男";
 	else
 		$sex = "女";
-	
-	if ($i == 1)
-		$institution = "体检机构A";
-	else if ($i == 2)
-		$institution = "体检机构B";
-	else if ($i == 3)
-		$institution = "体检机构C";
-	else if ($i == 4)
-		$institution = "体检机构D";
-	else 
+    try{
+        $sql = "select ORGANIZATIONNAME from t_check_organization where ORGANIZATIONID='$institution'";
+        $r = $db->query($sql);
+        $r = $r->fetchAll();
+        $institution = $r[0]["ORGANIZATIONNAME"];
+    }
+    catch(PDOException $e){
+        
 		$institution = "未知体检机构";
-	
-	if ($i == 1)
-		$group = "体检套餐A";
-	else if ($g == 2)
-		$group = "体检套餐B";
-	else if ($g == 3)
-		$group = "体检套餐C";
-	else if ($g == 4)
-		$group = "体检套餐D";
-	else 
+    }
+    try{
+        $sql = "select PACKAGENAME from t_check_package where PACKAGEID='$group'";
+        $r = $db->query($sql);
+        $r = $r->fetchAll();
+        $group = $r[0]["PACKAGENAME"];
+    }
+    catch(PDOException $e){
+        
 		$group = "未知体检套餐";
-	
-	//require "mysql.class.php"
-	//try {
-	//	$db = new mysqlpdo($dbinfo);
-	//	$sql = "select * from t_appointment_list where OPENID =".$openid.;
-	//	$r = $db->query($sql);
-	//	$r = $r->fetchAll();
-	//} catch (Exception e) {
-	//	
-	//}
-	//$name = $r[0]["NAME"];
-	//$sex = $r[0]["SEX"];
-	//$age = $r[0]["AGE"];
-	//$telephone = $r[0]["CELLPHONE"];
-	//$date = $r[0]["DATE"];
-	//$institution = $r[0]["ORGANIZATIONID"];
-	//$group = $r[0]["PACKAGEID"];
-	
+    }
 	//$name = "张三";
 	//$s = "1";
 	//$age = "33";

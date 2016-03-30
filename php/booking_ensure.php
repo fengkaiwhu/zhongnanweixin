@@ -17,8 +17,8 @@
 	$sex = $_POST["sex"];
 	$age = $_POST["age"];
 	$telephone = $_POST["telephone"];
-    $date = $_POST["date"];
-    $date = strtotime($data);
+    $date1 = $_POST["date"];
+    $date = strtotime($date1);
 	$institution = $_POST["institution"];
 	$group = $_POST["group"];
 	$status = "1";
@@ -38,7 +38,7 @@
 		<div data-role="content">
 			<h3 style="text-align:center;">预约确认</h3>
 			<div data-role="fieldcontain" style="align:center">
-				<p style="text-align:justify; font-size:14px; text-indent:2em"><?=$name?>，您好！您已预约成功我院体检中心体检套餐<?=$group?>，体检时间：<?=$date?>，请您合理安排时间，提前做好体检前的准备。</p>
+				<p style="text-align:justify; font-size:14px; text-indent:2em"><?=$name?>，您好！您已预约成功我院体检中心体检套餐<?=$group?>，体检时间：<?=$date1?>，请您合理安排时间，提前做好体检前的准备。</p>
 				<p style="text-align:justify; font-size:14px; text-indent:2em">通过微信公众号底部菜单“健康套餐”，可以查看体检套餐详细信息，了解挂号流程；通过“我的”，可以查看预约信息。武汉大学中南医院祝您身体健康，工作顺利！</p>
 			</div>
 		</div>

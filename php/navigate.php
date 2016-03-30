@@ -51,29 +51,25 @@
 		$content = json_decode($content, true);
 		$openid = $content['openid'];
 		
-		//查询数据库操作
-		$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
-		$link = mysql_select_db(DB_NAME, $con);
-		mysql_set_charset("utf8");
-		$sql = "select * from t_appointment_list where OPENID = '". $openid. "'";
-
-		$r = mysql_query($sql);
-		while ($row = mysql_fetch_array ($r, MYSQL_NUM)) {
-			//$g = $row[8];
-		}
-
-		$g = 3;
-	
-		if ($g == 1)
-			$group = "套餐A";
-		else if ($g == 2)
-			$group = "套餐B";
-		else if ($g == 3)
-			$group = "套餐C";
-		else if ($g == 4)
-			$group = "套餐D";
-		else 
-			$group = "未知体检套餐";
+	try {
+		$db = new mysqlpdo($dbinfo);
+		$sql = "select * from t_appointment_list where OPENID =".$openid."order by OPERATIONTIME desc limit 1";
+		$r = $db->query($sql);
+		$r = $r->fetchAll();
+	} catch (Exception e) {
+		
+	}
+    $group = $r[0]["PACKAGEID"];
+    try{
+        $sql = "select PACKAGENAME from t_check_package where PACKAGEID='$group'";
+        $r = $db->query($sql);
+        $r = $r->fetchAll();
+        $group = $r[0]["PACKAGENAME"];
+    }
+    catch(PDOException $e){
+        
+		$group = "未知体检套餐";
+    }
 	?>
 	<div data-role="page">
 		<div data-role="content">

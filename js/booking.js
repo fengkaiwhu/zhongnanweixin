@@ -13,8 +13,8 @@ $(function () {
                 if(data.status !== 0){
                     alert(data.content);
                 }else{
-                    $("#group").html('');
-                    for(i == 0; i< length(data.content); i++){
+                    $("#group").empty();
+                    for(var i = 0; i< data.content.length; i++){
                         if(i === 0)
                             $("#group").prepend("<option selected='selected' value='" + data.content[i]["PACKAGEID"] + "'>"+data.content[i]["PACKAGENAME"]+"</option>");
                         else
