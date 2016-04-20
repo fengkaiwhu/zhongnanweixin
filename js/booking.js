@@ -22,6 +22,7 @@ $(function () {
 
                     }
                 }
+                $("#group").selectmenu("refresh");
             },
             error:function(){
                 alert(data.content);
