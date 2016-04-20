@@ -31,8 +31,13 @@ $(function () {
                                 }
                             }
                         }
-                        result = result + '<tr class="success"><td>' + r_name['SUMMARY'] + '</td><td>' + r_value['SUMMARY'] + '</td></tr>';
-                        result = result + '<tr><td>' + r_name['DOCTORNAME'] + '</td><td>' + r_value['DOCTORNAME'] + '</td></tr>';
+                        if(r_name['SUMMARY']){
+                            result = result + '<tr class="success"><td>' + r_name['SUMMARY'] + '</td><td>' + r_value['SUMMARY'] + '</td></tr>';
+                        }
+                        if(r_name['DOCTORNAME']){
+                            result = result + '<tr><td>' + r_name['DOCTORNAME'] + '</td><td>' + r_value['DOCTORNAME'] + '</td></tr>';
+                        }
+
 						var h = "";
 						h = h + '<div class="table-responsive">'+
 								 		'<table class="table table-condensed table-bordered">'+	
@@ -58,9 +63,11 @@ $(function () {
 					i.next().html("<div style='text-align:center;'>网络错误!!</div>");				
 				},
 				beforeSend:function () {
-					i.next().html("<div style='text-align:center;'><img src='/img/loading1.gif' class='img-responsive img-thumbnail'></div>");				
+					i.next().html("<div style='text-align:center;'><img src='/img/loading2.gif' class='img-responsive img-thumbnail'></div>");				
 				}			
 			});
 		});
-
+	
+//	$(".ajax-data").click();
+	$(".ajax-data").trigger("click");
 });

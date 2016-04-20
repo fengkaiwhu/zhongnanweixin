@@ -46,6 +46,12 @@
 
         foreach($resultArray as $key=>$value){
             // FIXME: 这里需要注意数组中中文索引的问题,或者增加一个数组用来存放对应的中文名称,这里采用后一种方法
+
+            //有些检查条目可能没有进行,故没结果
+            if($value == ''){
+                continue;
+            }
+
             if($key == "SUMMARY"){
                 $r_value[$key] = $value;
                 $r_name[$key] = "小结";

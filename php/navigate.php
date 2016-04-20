@@ -19,99 +19,70 @@
 </head>
 
 <body>
-	<?php
-		require "../inc/mysql.class.php";
-		
-		function _getcurl($url) {
-	
-			$ch = curl_init();
-			
-			curl_setopt($ch, CURLOPT_URL, $url);      
-			
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HEADER, false);
-			curl_setopt($ch, CURLOPT_HEADER, false);
-			curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
-			curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			
-			$output = curl_exec($ch);
-			curl_close($ch);
-			return $output;
-		}
-		
-		$code = $_GET["code"];
-		$state = $_GET["state"];
-		//$appid = "wx777c25c676b36289";
-		//$appsecret = "977d97c23c77a7af29f4889fab8ff9a3";
-		
-		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=". APPID. "&secret=". APPSECRET. "&code=". $code. "&grant_type=authorization_code";
-
-		$content = _getcurl($url);
-		$content = json_decode($content, true);
-		$openid = $content['openid'];
-		
-	try {
-		$db = new mysqlpdo($dbinfo);
-		$sql = "select * from t_appointment_list where OPENID =".$openid."order by OPERATIONTIME desc limit 1";
-		$r = $db->query($sql);
-		$r = $r->fetchAll();
-	} catch (Exception e) {
-		
-	}
-    $group = $r[0]["PACKAGEID"];
-    try{
-        $sql = "select PACKAGENAME from t_check_package where PACKAGEID='$group'";
-        $r = $db->query($sql);
-        $r = $r->fetchAll();
-        $group = $r[0]["PACKAGENAME"];
-    }
-    catch(PDOException $e){
-        
-		$group = "未知体检套餐";
-    }
-	?>
-	<div data-role="page">
 		<div data-role="content">
-			<?php
-			echo "<h3 style='text-align:center'>体检导航(". $group. ")</h3>";
-			//通过openid在数据库中查询该用户的套餐及排队序号
-			//模拟数据（科室、科目、排队号、注意事项）
-			$r1_1 = array("科目A", "22", "科目B", "9", "科目C", "6", "科目D", "19");
-			$r1_2 = array("科目A", "13", "科目B", "11", "科目C", "14", "科目D", "22");
-			$r1_3 = array("科目A", "12", "科目B", "22", "科目C", "32", "科目D", "9");
-			$r1_4 = array("科目A", "17", "科目B", "2", "科目C", "6", "科目D", "27");
-			$r2 = array("注意事项：空腹", "注意事项：10点之前", "注意事项：静坐", "注意事项：憋尿");
-			
-			$r1 = array("科室A"=>array("科目A科目A科目A科目A科目A科目A"=>22, "科目B"=>9, "科目C"=>6, "科目D"=>19), 
-						"科室B"=>array("科目AA"=>13, "科目BB"=>11, "科目CC"=>14, "科目DD"=>22), 
-						"科室C"=>array("科目AAA"=>12, "科目BBB"=>2, "科目CCC"=>32, "科目DDD"=>9));
-									
-			foreach ($r1 as $name=>$detail) {
-				echo "<h2>". $name ."</h2>";
-				//echo "<div data-role='main' class='ui-content'>";
-				echo "<table width='90%' align='center'>";
-				echo "<thead>";
-				echo "<tr>";
-				echo "<th width='*'>科目</th>";
-				echo "<th width='60px' align='center'>排队号</th>";
-				echo "</tr>";
-				echo "</thead>";
-				echo "<tbody>";
-				
-				foreach ($detail as $key=>$num) {
-					echo "<tr>";
-					echo "<td>". $key. "</td>";
-					echo "<td align='center'>". $num. "</td>";
-					echo "</tr>";
-				}
-				echo "</tbody>";
-				echo "</table>";
-				echo "<p style='text-align:justify; font-size:16px; font-weight:bold'>注意事项：</p>";
-				echo "<p style='text-align:justify; font-size:14px; text-indent:2em'>空腹,注意事项注意事项注意事项注意事项注意事项注意事项。</p>";
-			}
-			?>
+             <table width="100%">
+			<tr>
+				<td>
+				  <label for="name">排队号票：</label>
+				</td>
+				<td>
+					<input type="text" name="ticket" id="ticket" placeholder="06352156"  readonly="readonly" onblur="upDate(this)" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+				  <label for="name">我的套餐：</label>
+				</td>
+				<td>
+					<?php
+					$group = "常规体检A";
+					echo "<label for='name'>". $group. "</label>";
+					?>
+				</td>
+			</tr>
+            </table>
+
 		</div>
-	</div>
+	<?php
+	
+	$r1 = array(array("office"=>"口腔科", "number"=>9, "state"=>"正常", "detail"=>"口腔科注意事项口腔科注意事项口腔科注意事项口腔科注意事项", "image"=>"/img/buju.jpg"), 
+				array("office"=>"内科", "number"=>22, "state"=>"正常", "detail"=>"内科注意事项内科注意事项内科注意事项内科注意事项内科注意事项", "image"=>"/img/buju.jpg"), 
+				array("office"=>"放射科", "number"=>17, "state"=>"正常", "detail"=>"放射科注意事项放射科注意事项放射科注意事项放射科注意事项放射科注意事项", "image"=>"/img/buju.jpg"), 
+				array("office"=>"心电图室", "number"=>5, "state"=>"正常", "detail"=>"心电图室注意事项心电图室注意事项心电图室注意事项心电图室注意事项", "image"=>"/img/buju.jpg"), 
+				array("office"=>"眼科", "number"=>3, "state"=>"正常", "detail"=>"眼科注意事项眼科注意事项眼科注意事项眼科注意事项眼科注意事项眼科注意事项", "image"=>"/img/buju.jpg"), 
+				array("office"=>"化验室", "number"=>31, "state"=>"正常", "detail"=>"化验室注意事项化验室注意事项化验室注意事项化验室注意事项化验室注意事项", "image"=>"/img/buju.jpg"));
+
+		echo "<table width='90%' align='center'>";
+		echo "<thead>";
+		echo "<tr>";
+		echo "<th width='*'>科目</th>";
+		echo "<th width='60px' align='center'>排队号</th>";
+		echo "<th width='60px' align='center'>状态</th>";
+		echo "</tr>";
+		echo "</thead>";
+		echo "<tbody>";
+		foreach ($r1 as $value) {
+			echo "<tr>";
+			echo "<td>". $value['office']. "</td>";
+			echo "<td>". $value['number']. "</td>";
+			echo "<td>". $value['state']. "</td>";
+			echo "</tr>";
+		}
+		echo "</tbody>";
+		echo "</table>";
+		
+		echo "<div data-role='content'>";
+		echo "<div data-role='collapsible-set'>";				
+		foreach ($r1 as $value) {
+			echo "<div data-role='collapsible'>";
+			echo "<h3>". $value['office']. "详细信息</h3>";
+			echo "<p>". $value['detail']. "</p>";
+            echo "<img src=". $value['image']. " width='100%' />";
+			echo "</div>";
+		}
+		echo "</div>";
+		echo "</div>";
+
+	?>
 </body>
 </html>

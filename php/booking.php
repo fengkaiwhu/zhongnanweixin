@@ -9,7 +9,100 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <title>预约体检</title>
 </head>
-
+<script type="text/javascript">
+	
+	function checkAll() {
+		
+		var name = document.getElementById("name").value;
+		
+		if (name == "" || name.length < 1) {
+			alert("输入姓名有误");
+			return false;
+		}		
+		
+		var idNum = document.getElementById("idNum").value;
+		
+		var len = idNum.length;
+		var aCity = {
+			11 : "北京",
+			12 : "天津",
+			13 : "河北",
+			14 : "山西",
+			15 : "内蒙古",
+			21 : "辽宁",
+			22 : "吉林",
+			23 : "黑龙江 ",
+			31 : "上海",
+			32 : "江苏",
+			33 : "浙江",
+			34 : "安徽",
+			35 : "福建",
+			36 : "江西",
+			37 : "山东",
+			41 : "河南",
+			42 : "湖北 ",
+			43 : "湖南",
+			44 : "广东",
+			45 : "广西",
+			46 : "海南",
+			50 : "重庆",
+			51 : "四川",
+			52 : "贵州",
+			53 : "云南",
+			54 : "西藏 ",
+			61 : "陕西",
+			62 : "甘肃",
+			63 : "青海",
+			64 : "宁夏",
+			65 : "新疆",
+			71 : "台湾",
+			81 : "香港",
+			82 : "澳门",
+			91 : "国外 "
+		}
+		if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(idNum))) {
+			alert("输入身份证号不符合规定");
+			return false;
+		} else if (len == 18) {
+			var valnum;
+			var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5,
+					8, 4, 2);
+			var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4',
+					'3', '2');
+			var nTemp = 0, i;
+			for (i = 0; i < 17; i++) {
+				nTemp += idNum.substr(i, 1) * arrInt[i];
+			}
+			valnum = arrCh[nTemp % 11];
+			if (valnum != idNum.substr(17, 1)) {
+				alert("输入身份证号不符合规定");
+				return false;
+			} else if (aCity[parseInt(idNum.substr(0, 2))] == null) {
+				alert("输入身份证号不符合规定");
+				return false;
+			}
+		}
+		
+		var tel = document.getElementById("telephone").value;
+		
+		if (tel.length != 11) {
+			alert("输入联系电话有误");
+			return false;
+		}
+		
+		var date = document.getElementById("date").value;
+		
+		date = date.replace(/-/g, "/");
+		var nowDate = new Date();
+		var checkDate = new Date(Date.parse(date));
+		if (checkDate < nowDate) {
+			alert("预约日期有误");
+			return false;
+		}
+		
+		alert("请确认预约信息，预约成功后无法手动更改！");
+	}
+</script>
 <body onload="getvalue()">
   <?php
   require "../inc/mysql.class.php";
@@ -69,9 +162,9 @@
         $package = "";
         foreach($result as $key=>$value){
             if($key == 0){
-                $package .= "<option selected='selected' value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>"
+                $package .= "<option selected='selected' value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>";
             }else{
-                $package .= "<option value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>"
+                $package .= "<option value='".$value["PACKAGEID"]."'>".$value["PACKAGENAME"]."</option>";
 
             }
         }
@@ -169,7 +262,7 @@
          </tr>
   <tr align="center">
       <td colspan=2>
-         <input type="submit" value="--提交预约信息--">
+         <input type="submit" value="--提交预约信息--" onclick="return checkAll()">
      </td>
   </tr>
   </table>

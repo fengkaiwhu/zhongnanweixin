@@ -154,14 +154,12 @@ class WeChat
 				$city = strip_tags($content->city);
 				$province = strip_tags($content->province);
 				$country = strip_tags($content->country);
-				$contentStr="openid：".$openid."\n姓名：".$nickname."\n性别：".$sex."\n城市：".$city."\n省份：".$province."\n国家：".$country;
-				//插入数据库操作
-				$con = mysql_connect(SAE_MYSQL_HOST_M. ":". SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS);
-				$link = mysql_select_db(SAE_MYSQL_DB, $con);
-				mysql_set_charset("utf8");
+			$con = mysql_connect(DB_HOST. ":". DB_PORT, DB_USER, DB_PASS);
+			$link = mysql_select_db(DB_NAME, $con);
+			mysql_set_charset("utf8");
 
-				$sql = "insert into user (`openid`, `sex`, `nickname`, `province`, `city`, `country`) values ('".$openid."', '".$sex."', '".$nickname."', '".$city."', '".$province."', '".$country."')";
-				mysql_query($sql);
+            $contentStr = "insert into users (OPENID, SEX, NICKNAME, PROVINCE, CITY, COUNTRY) values ('".$openid."', '".$sex."', '".$nickname."', '".$city."', '".$province."', '".$country."')";
+			mysql_query($contentStr);
                 break;
             case '测试2':
             	$contentStr='关键字回复“测试2”';

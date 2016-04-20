@@ -93,7 +93,7 @@
             echo "<input type='hidden' id='tablename' value='".$table."'>";
             echo "<h5 class='panel-title' style='text-align:center;'>".$name."</h5>";
             echo "</div>";
-            echo "<div></div>";
+            echo "<div><div style='text-align:center;'><img src='/img/loading2.gif' class='img-responsive img-thumbnail'></div></div>";
             echo "</div>";
         }
     }

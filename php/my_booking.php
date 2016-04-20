@@ -41,23 +41,26 @@
 	$content = json_decode($content, true);
 	$openid = $content['openid'];
 	
-	require "../inc/mysql.class.php";
 	try {
 		$db = new mysqlpdo($dbinfo);
-		$sql = "select * from t_appointment_list where OPENID =".$openid."order by OPERATIONTIME desc limit 1";
+		$sql = "select * from t_appointment_list where OPENID ='".$openid."'order by OPERATIONTIME desc limit 1";
 		$r = $db->query($sql);
 		$r = $r->fetchAll();
-	} catch (Exception e) {
+	} catch (Exception $e) {
 		
-	}
-	$name = $r[0]["NAME"];
-	$s = $r[0]["SEX"];
-	$age = $r[0]["AGE"];
-	$telephone = $r[0]["CELLPHONE"];
-    $date = $r[0]["DATE"];
+    }
+    if(count($r) == 0){
+        echo "暂时没有您的预约信息!";
+        exit;
+    }
+	$name = $r[0]["name"];
+	$s = $r[0]["sex"];
+	$age = $r[0]["age"];
+	$telephone = $r[0]["cellphone"];
+    $date = $r[0]["date"];
     $date = date("Y-m-d", $date);
-	$institution = $r[0]["ORGANIZATIONID"];
-    $group = $r[0]["PACKAGEID"];
+	$institution = $r[0]["organizationid"];
+    $group = $r[0]["packageid"];
 	if ($s == 1)
 		$sex = "男";
 	else
